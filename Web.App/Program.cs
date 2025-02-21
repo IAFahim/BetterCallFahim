@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Web.App;
-using Web.App.Controllers;
 using Web.App.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,10 +14,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.Configure<RouteOptions>(options =>
-{
-    options.LowercaseUrls = true;
-});
+builder.Services.Configure<RouteOptions>(options => { options.LowercaseUrls = true; });
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -39,21 +35,18 @@ builder.Services.AddSwaggerGen(options =>
             Url = new Uri("https://opensource.org/licenses/MIT")
         }
     });
-    
-    options.MapType<DateOnly>(() => new OpenApiSchema
-    {
-        Type = "string",
-        Format = "date",
-        Example = new OpenApiString(DateTime.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss")),
-        Description = "Date in YYYY-MM-DD format (e.g., 2025-02-14-00-00-00)"
-    });
+
+    // options.MapType<DateTime>(() => new OpenApiSchema
+    // {
+    //     Type = "string",
+    //     Format = "DateTime",
+    //     Example = new OpenApiString(DateTime.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss")),
+    //     Description = $"DateTime in yyyy-MM-dd-HH-mm-ss format (e.g., {DateTime.UtcNow:yyyy-MM-dd-HH-mm-ss})"
+    // });
 });
 
 
-builder.Services.AddResponseCompression(options =>
-{
-    options.EnableForHttps = true;
-});
+builder.Services.AddResponseCompression(options => { options.EnableForHttps = true; });
 
 builder.Services.AddScoped<IBookingService, BookingService>();
 
@@ -64,8 +57,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-if (!app.Environment.IsDevelopment())
+else
 {
     app.UseHsts();
 }

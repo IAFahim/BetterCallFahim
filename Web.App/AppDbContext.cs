@@ -6,5 +6,5 @@ namespace Web.App;
 public class AppDbContext(DbContextOptions<AppDbContext> contextOptions) : DbContext(contextOptions)
 {
     public DbSet<Booking> Bookings { get; set; }
-    public DbSet<Car> Car { get; set; }
+    public DbSet<Car> Cars { get; set; }
 }

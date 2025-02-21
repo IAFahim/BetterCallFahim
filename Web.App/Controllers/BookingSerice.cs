@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Web.App.Dtos;
 using Web.App.Services;
 
@@ -12,10 +13,11 @@ namespace Web.App.Controllers
         [HttpGet("Booking")]
         [ProducesResponseType(typeof(List<BookingCarDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<List<BookingCarDto>>> GetCalendarBookings(
-            [FromQuery] Guid? carId,[FromQuery] DateOnly startDate, [FromQuery] DateOnly endDate
+            [FromQuery] Guid? id, [FromQuery] Guid? carId,
+            [FromQuery] DateTime? from, [FromQuery] DateTime? to
         )
         {
-            var bookings = await bookingService.GetCalendarBookings(carId, startDate);
+            var bookings = await bookingService.GetCalendarBookings(id, carId, from, to);
             return Ok(bookings);
         }
 

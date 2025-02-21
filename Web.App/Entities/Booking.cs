@@ -4,25 +4,39 @@ namespace Web.App.Entities
 {
     public class Booking
     {
-        [Key]
-        public Guid Id { get; set; }
+        public static Booking CreateNow(DateTime startDateTime,
+            RepeatOption repeatOption,
+            DaysOfWeek? daysToRepeatOn,
+            DateTime endDateTime,
+            Car car
+        )
+        {
+            return new Booking
+            {
+                Id = Guid.NewGuid(),
+                RequestedOn = DateTime.UtcNow,
+                StartDateTime = startDateTime,
+                RepeatOption = repeatOption,
+                DaysToRepeatOn = daysToRepeatOn,
+                EndDateTime = endDateTime,
+                CarId = car.Id,
+                Car = car,
+            };
+        }
 
-        [Required]
-        public DateTime StartDateTime { get; set; }
+        [Key] public Guid Id { get; set; }
+
+        public DateTime RequestedOn { get; set; }
+        [Required] public DateTime StartDateTime { get; set; }
 
         [Required]
         //Enum: DoesNotRepeat, Daily, Weekly
         public RepeatOption RepeatOption { get; set; }
 
-        public DateTime? EndDateTime { get; set; }
-
         //Enum: None,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday
         public DaysOfWeek? DaysToRepeatOn { get; set; }
-
-        public DateTime RequestedOn { get; set; }
-
+        public DateTime EndDateTime { get; set; }
         public Guid CarId { get; set; }
-
         public Car Car { get; set; }
     }
 
