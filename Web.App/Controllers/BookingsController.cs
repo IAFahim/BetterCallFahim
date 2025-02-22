@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Web.App.Dtos;
 using Web.App.Services;
 
@@ -24,13 +23,13 @@ namespace Web.App.Controllers
 
         // POST: api/Bookings
         [HttpPost("Booking")]
-        [ProducesResponseType(typeof(CreateUpdateBookingDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(List<BookingCarDto>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<CreateUpdateBookingDto>> PostBooking(CreateUpdateBookingDto bookingDto)
+        public async Task<ActionResult<ReturnBookingDto>> PostBooking(CreateBookingDto bookingDto)
         {
-            var booking = await bookingService.CreateBooking(bookingDto);
-            return CreatedAtAction(nameof(GetCalendarBookings), new { id = booking.Id }, booking);
+            var returnBookingDto = await bookingService.CreateBooking(bookingDto);
+            return CreatedAtAction(nameof(GetCalendarBookings), new { id = returnBookingDto.Id }, returnBookingDto);
         }
 
         // GET: api/SeedData

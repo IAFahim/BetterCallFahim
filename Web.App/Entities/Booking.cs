@@ -4,6 +4,21 @@ namespace Web.App.Entities
 {
     public class Booking
     {
+        [Key] public Guid Id { get; set; }
+
+        public DateTime RequestedOn { get; set; }
+        [Required] public DateTime StartDateTime { get; set; }
+
+        [Required]
+        //Enum: DoesNotRepeat, Daily, Weekly
+        public RepeatOption RepeatOption { get; set; }
+
+        //Enum: None,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday
+        public DaysOfWeek? DaysToRepeatOn { get; set; }
+        public DateTime EndDateTime { get; set; }
+        public Guid CarId { get; set; }
+        public Car Car { get; set; }
+        
         public static Booking CreateNow(DateTime startDateTime,
             RepeatOption repeatOption,
             DaysOfWeek? daysToRepeatOn,
@@ -23,21 +38,6 @@ namespace Web.App.Entities
                 Car = car,
             };
         }
-
-        [Key] public Guid Id { get; set; }
-
-        public DateTime RequestedOn { get; set; }
-        [Required] public DateTime StartDateTime { get; set; }
-
-        [Required]
-        //Enum: DoesNotRepeat, Daily, Weekly
-        public RepeatOption RepeatOption { get; set; }
-
-        //Enum: None,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday
-        public DaysOfWeek? DaysToRepeatOn { get; set; }
-        public DateTime EndDateTime { get; set; }
-        public Guid CarId { get; set; }
-        public Car Car { get; set; }
     }
 
     [Flags]

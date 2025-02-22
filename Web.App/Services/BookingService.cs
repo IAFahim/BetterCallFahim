@@ -6,8 +6,10 @@ namespace Web.App.Services;
 
 public class BookingService(AppDbContext context) : IBookingService
 {
-    public async Task<List<BookingCarDto>> GetCalendarBookings(Guid? bookingId, Guid? carId, DateTime? from,
-        DateTime? to)
+    public async Task<List<BookingCarDto>> GetCalendarBookings(
+        Guid? bookingId, Guid? carId,
+        DateTime? from, DateTime? to
+    )
     {
         var query = context.Bookings.Include(b => b.Car).AsQueryable();
         if (bookingId.HasValue) query = query.Where(booking => booking.Id == bookingId);
@@ -15,25 +17,16 @@ public class BookingService(AppDbContext context) : IBookingService
         if (from.HasValue) query = query.Where(booking => from <= booking.StartDateTime);
         if (to.HasValue) query = query.Where(booking => booking.EndDateTime <= to);
         var bookings = await query.ToListAsync();
-        return bookings.Select(BookingToDto).ToList();
+        return bookings.Select(booking => booking.ToDto(from, to)).ToList();
     }
 
-    private static BookingCarDto BookingToDto(Booking booking)
-    {
-        var bookingCarDto = new BookingCarDto
-        {
-            Id = booking.Id,
-            StartDateTime = booking.StartDateTime,
-            EndDateTime = booking.EndDateTime,
-            Car = booking.Car,
-            BookedDates = new List<DateOnly>()
-        };
-        return bookingCarDto;
-    }
 
-    public async Task<CreateUpdateBookingDto> CreateBooking(CreateUpdateBookingDto bookingDto)
+    public async Task<ReturnBookingDto> CreateBooking(CreateBookingDto bookingDto)
     {
-        return new CreateUpdateBookingDto();
+        var booking = bookingDto.ToBooking();
+        await context.Bookings.AddAsync(booking);
+        await context.SaveChangesAsync();
+        return booking.ToReturnBookingDto();
     }
 
     public async Task<IEnumerable<BookingCarDto>> GetSeedData()
